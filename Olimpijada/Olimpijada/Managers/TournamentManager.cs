@@ -35,6 +35,9 @@ namespace Olimpijada.Managers
         ObservableCollection<Country> FinalPair = new ObservableCollection<Country>();
         ObservableCollection<Country> ThirdPlacePair = new ObservableCollection<Country>();
 
+
+        ObservableCollection<Country> Medals = new ObservableCollection<Country>();
+
         Random r = new Random();
 
         private bool potsMade = false;
@@ -107,7 +110,7 @@ namespace Olimpijada.Managers
 
                 if (!simulateQuarterFinalFinished)
                 {
-                    QuarterFinalDraw += "Četvrtfinale:\n";
+                    QuarterFinalDraw += "Četvrtfinale:\n\n";
                     int[] result = new int[2];
 
 
@@ -115,7 +118,7 @@ namespace Olimpijada.Managers
                     Match matchForFirstTeam = new Match(DateTime.Now, QuarterFinalPair1[1].ISOCode, result[0] + ":" + result[1]);
                     Match matchForSecondTeam = new Match(DateTime.Now, QuarterFinalPair1[0].ISOCode, result[1] + ":" + result[0]);
 
-                    QuarterFinalDraw += "\t\t" + QuarterFinalPair1[0].Team + " - " + QuarterFinalPair1[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                    QuarterFinalDraw += "\t" + QuarterFinalPair1[0].Team + " - " + QuarterFinalPair1[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
                     if (result[0] > result[1])
@@ -131,7 +134,7 @@ namespace Olimpijada.Managers
                     matchForFirstTeam = new Match(DateTime.Now, QuarterFinalPair2[1].ISOCode, result[0] + ":" + result[1]);
                     matchForSecondTeam = new Match(DateTime.Now, QuarterFinalPair2[0].ISOCode, result[1] + ":" + result[0]);
 
-                    QuarterFinalDraw += "\t\t" + QuarterFinalPair2[0].Team + " - " + QuarterFinalPair2[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                    QuarterFinalDraw += "\t" + QuarterFinalPair2[0].Team + " - " + QuarterFinalPair2[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
                     if (result[0] > result[1])
@@ -147,7 +150,7 @@ namespace Olimpijada.Managers
                     matchForFirstTeam = new Match(DateTime.Now, QuarterFinalPair3[1].ISOCode, result[0] + ":" + result[1]);
                     matchForSecondTeam = new Match(DateTime.Now, QuarterFinalPair3[0].ISOCode, result[1] + ":" + result[0]);
 
-                    QuarterFinalDraw += "\t\t" + QuarterFinalPair3[0].Team + " - " + QuarterFinalPair3[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                    QuarterFinalDraw += "\t" + QuarterFinalPair3[0].Team + " - " + QuarterFinalPair3[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
                     if (result[0] > result[1])
@@ -163,7 +166,7 @@ namespace Olimpijada.Managers
                     matchForFirstTeam = new Match(DateTime.Now, QuarterFinalPair4[1].ISOCode, result[0] + ":" + result[1]);
                     matchForSecondTeam = new Match(DateTime.Now, QuarterFinalPair4[0].ISOCode, result[1] + ":" + result[0]);
 
-                    QuarterFinalDraw += "\t\t" + QuarterFinalPair4[0].Team + " - " + QuarterFinalPair4[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                    QuarterFinalDraw += "\t" + QuarterFinalPair4[0].Team + " - " + QuarterFinalPair4[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
                     if (result[0] > result[1])
@@ -175,8 +178,8 @@ namespace Olimpijada.Managers
                         SemiFinalPair2.Add(QuarterFinalPair4[1]);
                     }
 
-                    QuarterFinalDraw += "\nPolufinalni mečevi:\n\n" + "\t\t" + SemiFinalPair1[0].Team + " - " + SemiFinalPair1[1].Team;
-                    QuarterFinalDraw += "\n\t\t" + SemiFinalPair2[0].Team + " - " + SemiFinalPair2[1].Team + "\n";
+                    QuarterFinalDraw += "\nPolufinalni mečevi:\n\n" + "\t" + SemiFinalPair1[0].Team + " - " + SemiFinalPair1[1].Team;
+                    QuarterFinalDraw += "\n\t" + SemiFinalPair2[0].Team + " - " + SemiFinalPair2[1].Team + "\n";
 
                     simulateQuarterFinalFinished = true;
                 }
@@ -202,7 +205,7 @@ namespace Olimpijada.Managers
             {
                 if (!simulateSemiFinalFinished)
                 {
-                    SemiFinalDraw += "Polufinale:\n";
+                    SemiFinalDraw += "Polufinale:\n\n";
                     int[] result = new int[2];
 
 
@@ -210,7 +213,7 @@ namespace Olimpijada.Managers
                     Match matchForFirstTeam = new Match(DateTime.Now, SemiFinalPair1[1].ISOCode, result[0] + ":" + result[1]);
                     Match matchForSecondTeam = new Match(DateTime.Now, SemiFinalPair1[0].ISOCode, result[1] + ":" + result[0]);
 
-                    SemiFinalDraw += "\t\t" + SemiFinalPair1[0].Team + " - " + SemiFinalPair1[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                    SemiFinalDraw += "\t" + SemiFinalPair1[0].Team + " - " + SemiFinalPair1[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
                     if (result[0] > result[1])
@@ -228,7 +231,7 @@ namespace Olimpijada.Managers
                     matchForFirstTeam = new Match(DateTime.Now, SemiFinalPair2[1].ISOCode, result[0] + ":" + result[1]);
                     matchForSecondTeam = new Match(DateTime.Now, SemiFinalPair2[0].ISOCode, result[1] + ":" + result[0]);
 
-                    SemiFinalDraw += "\t\t" + SemiFinalPair2[0].Team + " - " + SemiFinalPair2[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                    SemiFinalDraw += "\t" + SemiFinalPair2[0].Team + " - " + SemiFinalPair2[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
                     if (result[0] > result[1])
@@ -242,8 +245,8 @@ namespace Olimpijada.Managers
                         ThirdPlacePair.Add(SemiFinalPair2[0]);
                     }
 
-                    SemiFinalDraw += "\nFinale:\n\n" + "\t\t" + FinalPair[0].Team + " - " + FinalPair[1].Team + "\n";
-                    SemiFinalDraw += "\nUtakmica za treće mesto:\n\n" + "\t\t" + ThirdPlacePair[0].Team + " - " + ThirdPlacePair[1].Team + "\n";
+                    SemiFinalDraw += "\nFinale:\n\n" + "\t" + FinalPair[0].Team + " - " + FinalPair[1].Team + "\n";
+                    SemiFinalDraw += "\nUtakmica za treće mesto:\n\n" + "\t" + ThirdPlacePair[0].Team + " - " + ThirdPlacePair[1].Team + "\n";
 
                     simulateSemiFinalFinished = true;
                 }
@@ -276,8 +279,19 @@ namespace Olimpijada.Managers
                     Match matchForFirstTeam = new Match(DateTime.Now, FinalPair[1].ISOCode, result[0] + ":" + result[1]);
                     Match matchForSecondTeam = new Match(DateTime.Now, FinalPair[0].ISOCode, result[1] + ":" + result[0]);
 
-                    FinalDraw += "\t\t" + FinalPair[0].Team + " - " + FinalPair[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                    FinalDraw += "\t" + FinalPair[0].Team + " - " + FinalPair[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
+
+                    if (result[0] > result[1])
+                    {
+                        Medals.Add(FinalPair[0]);
+                        Medals.Add(FinalPair[1]);
+                    }
+                    else
+                    {
+                        Medals.Add(FinalPair[1]);
+                        Medals.Add(FinalPair[0]);
+                    }
 
                     FinalDraw += "\nUtakmica za treće mesto:\n\n";
 
@@ -285,9 +299,19 @@ namespace Olimpijada.Managers
                     matchForFirstTeam = new Match(DateTime.Now, ThirdPlacePair[1].ISOCode, result[0] + ":" + result[1]);
                     matchForSecondTeam = new Match(DateTime.Now, ThirdPlacePair[0].ISOCode, result[1] + ":" + result[0]);
 
-                    FinalDraw += "\t\t" + ThirdPlacePair[0].Team + " - " + ThirdPlacePair[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                    FinalDraw += "\t" + ThirdPlacePair[0].Team + " - " + ThirdPlacePair[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
+                    if (result[0] > result[1])
+                    {
+                        Medals.Add(ThirdPlacePair[0]);
+                    }
+                    else
+                    {
+                        Medals.Add(ThirdPlacePair[1]);
+                    }
+
+                    FinalDraw += "\nMedalje:\n\n\t" + "1." + Medals[0].Team + "\n\t" + "2." + Medals[1].Team + "\n\t3." + Medals[2].Team + "\n\n";
 
                     simulateFinalFinished = true;
                 }
@@ -323,11 +347,15 @@ namespace Olimpijada.Managers
             }
         }
 
-        public void PrintThePots(bool can)
+        public void PrintThePotsAndQuarterFinalMatches(bool can)
         {
             Pots = "\n**************************************************************\n\n";
             if (can)
             {
+                if (!drawMade)
+                {
+                    MakeThePairsOfQuarterFinal();
+                }
 
                 Pots += "Šeširi:\n\tŠešir D\n\t\t";
                 Pots += PotD[0].Team + "\n\t\t";
@@ -344,6 +372,14 @@ namespace Olimpijada.Managers
                 Pots += "Šešir G\n\t\t";
                 Pots += PotG[0].Team + "\n\t\t";
                 Pots += PotG[1].Team;
+
+                Pots += "\n\nEliminaciona faza:\n";
+
+                Pots += "\n\t" + QuarterFinalPair1[0].Team + " - " + QuarterFinalPair1[1].Team;
+                Pots += "\n\t" + QuarterFinalPair2[0].Team + " - " + QuarterFinalPair2[1].Team + "\n";
+
+                Pots += "\n\t" + QuarterFinalPair3[0].Team + " - " + QuarterFinalPair3[1].Team;
+                Pots += "\n\t" + QuarterFinalPair4[0].Team + " - " + QuarterFinalPair4[1].Team;
 
                 potsMade = true;
             }

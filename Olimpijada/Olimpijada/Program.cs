@@ -71,7 +71,7 @@ void Menu(int result)
             groupManager.PrintFinalRankingInTheGroups();
             break;
         case 8:
-            tournamentManager.PrintThePots(groupStageFinished);
+            tournamentManager.PrintThePotsAndQuarterFinalMatches(groupStageFinished);
             break;
         case 9:
             tournamentManager.SimulateQuearterFinal(groupStageFinished);
