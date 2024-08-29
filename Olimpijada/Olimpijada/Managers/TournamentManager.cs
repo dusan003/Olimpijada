@@ -19,10 +19,10 @@ namespace Olimpijada.Managers
 
         private ObservableCollection<Country> finalRanking = new ObservableCollection<Country>();
 
-        ObservableCollection<Country> HatD = new ObservableCollection<Country>();
-        ObservableCollection<Country> HatE = new ObservableCollection<Country>();
-        ObservableCollection<Country> HatF = new ObservableCollection<Country>();
-        ObservableCollection<Country> HatG = new ObservableCollection<Country>();
+        ObservableCollection<Country> PotD = new ObservableCollection<Country>();
+        ObservableCollection<Country> PotE = new ObservableCollection<Country>();
+        ObservableCollection<Country> PotF = new ObservableCollection<Country>();
+        ObservableCollection<Country> PotG = new ObservableCollection<Country>();
 
         ObservableCollection<Country> QuarterFinalPair1 = new ObservableCollection<Country>();
         ObservableCollection<Country> QuarterFinalPair2 = new ObservableCollection<Country>();
@@ -33,16 +33,17 @@ namespace Olimpijada.Managers
         ObservableCollection<Country> SemiFinalPair2 = new ObservableCollection<Country>();
 
         ObservableCollection<Country> FinalPair = new ObservableCollection<Country>();
+        ObservableCollection<Country> ThirdPlacePair = new ObservableCollection<Country>();
 
         Random r = new Random();
 
-        private bool hatsMade = false;
+        private bool potsMade = false;
         private bool drawMade = false;
         private bool simulateQuarterFinalFinished = false;
         private bool simulateSemiFinalFinished = false;
         private bool simulateFinalFinished = false;
 
-        private string Hats;
+        private string Pots;
 
         private string QuarterFinalDraw;
         private string SemiFinalDraw;
@@ -57,38 +58,38 @@ namespace Olimpijada.Managers
         {
             if (!drawMade)
             {
-                QuarterFinalPair1.Add(HatD[0]);
-                QuarterFinalPair2.Add(HatD[1]);
+                QuarterFinalPair1.Add(PotD[0]);
+                QuarterFinalPair2.Add(PotD[1]);
 
-                int indexHatG = r.Next(0, 2);
+                int indexPotG = r.Next(0, 2);
 
-                if (HatD[0].Group != HatG[indexHatG].Group && HatD[1].Group != HatG[1-indexHatG].Group)
+                if (PotD[0].Group != PotG[indexPotG].Group && PotD[1].Group != PotG[1- indexPotG].Group)
                 {
-                    QuarterFinalPair1.Add(HatG[indexHatG]);
-                    QuarterFinalPair2.Add(HatG[1 - indexHatG]);
+                    QuarterFinalPair1.Add(PotG[indexPotG]);
+                    QuarterFinalPair2.Add(PotG[1 - indexPotG]);
                 }
                 else
                 {
-                    int newIndex = 1 - indexHatG;
-                    QuarterFinalPair1.Add(HatG[newIndex]);
-                    QuarterFinalPair2.Add(HatG[1 - newIndex]);
+                    int newIndex = 1 - indexPotG;
+                    QuarterFinalPair1.Add(PotG[newIndex]);
+                    QuarterFinalPair2.Add(PotG[1 - newIndex]);
                 }
 
-                QuarterFinalPair3.Add(HatE[0]);
-                QuarterFinalPair4.Add(HatE[1]);
+                QuarterFinalPair3.Add(PotE[0]);
+                QuarterFinalPair4.Add(PotE[1]);
 
-                int indexHatF = r.Next(0, 2);
+                int indexPotF = r.Next(0, 2);
 
-                if (HatE[0].Group != HatF[indexHatF].Group && HatE[1].Group != HatF[1 - indexHatG].Group)
+                if (PotE[0].Group != PotF[indexPotF].Group && PotE[1].Group != PotF[1 - indexPotG].Group)
                 {
-                    QuarterFinalPair3.Add(HatF[indexHatF]);
-                    QuarterFinalPair4.Add(HatF[1 - indexHatF]);
+                    QuarterFinalPair3.Add(PotF[indexPotF]);
+                    QuarterFinalPair4.Add(PotF[1 - indexPotF]);
                 }
                 else
                 {
-                    int newIndex = 1 - indexHatF;
-                    QuarterFinalPair3.Add(HatF[newIndex]);
-                    QuarterFinalPair4.Add(HatF[1 - newIndex]);
+                    int newIndex = 1 - indexPotF;
+                    QuarterFinalPair3.Add(PotF[newIndex]);
+                    QuarterFinalPair4.Add(PotF[1 - newIndex]);
                 }
                 drawMade = true;
             }
@@ -215,10 +216,12 @@ namespace Olimpijada.Managers
                     if (result[0] > result[1])
                     {
                         FinalPair.Add(SemiFinalPair1[0]);
+                        ThirdPlacePair.Add(SemiFinalPair1[1]);
                     }
                     else
                     {
                         FinalPair.Add(SemiFinalPair1[1]);
+                        ThirdPlacePair.Add(SemiFinalPair1[0]);
                     }
 
                     result = matchManager.SimulateMatch(SemiFinalPair2[0], SemiFinalPair2[1]);
@@ -231,13 +234,16 @@ namespace Olimpijada.Managers
                     if (result[0] > result[1])
                     {
                         FinalPair.Add(SemiFinalPair2[0]);
+                        ThirdPlacePair.Add(SemiFinalPair2[1]);
                     }
                     else
                     {
                         FinalPair.Add(SemiFinalPair2[1]);
+                        ThirdPlacePair.Add(SemiFinalPair2[0]);
                     }
 
                     SemiFinalDraw += "\nFinale:\n\n" + "\t\t" + FinalPair[0].Team + " - " + FinalPair[1].Team + "\n";
+                    SemiFinalDraw += "\nUtakmica za treće mesto:\n\n" + "\t\t" + ThirdPlacePair[0].Team + " - " + ThirdPlacePair[1].Team + "\n";
 
                     simulateSemiFinalFinished = true;
                 }
@@ -254,7 +260,7 @@ namespace Olimpijada.Managers
             Console.Write(SemiFinalDraw);
         }
 
-        public void SimulateFinalMatch()
+        public void SimulateFinalMatchAndThirdPlaceMatch()
         {
             FinalDraw = "\n**************************************************************\n\n";
 
@@ -262,7 +268,7 @@ namespace Olimpijada.Managers
             {
                 if (!simulateFinalFinished)
                 {
-                    FinalDraw += "Finale:\n";
+                    FinalDraw += "Finale:\n\n";
                     int[] result = new int[2];
 
 
@@ -273,72 +279,80 @@ namespace Olimpijada.Managers
                     FinalDraw += "\t\t" + FinalPair[0].Team + " - " + FinalPair[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
+                    FinalDraw += "\nUtakmica za treće mesto:\n\n";
+
+                    result = matchManager.SimulateMatch(ThirdPlacePair[0], ThirdPlacePair[1]);
+                    matchForFirstTeam = new Match(DateTime.Now, ThirdPlacePair[1].ISOCode, result[0] + ":" + result[1]);
+                    matchForSecondTeam = new Match(DateTime.Now, ThirdPlacePair[0].ISOCode, result[1] + ":" + result[0]);
+
+                    FinalDraw += "\t\t" + ThirdPlacePair[0].Team + " - " + ThirdPlacePair[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                    //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
 
                     simulateFinalFinished = true;
                 }
                 else
                 {
-                    FinalDraw += "\nFinalna utakmica je već odigrana!\n\n";
+                    FinalDraw += "\nFinalna utakmica i utakmica za treće messto su već odigrane!\n\n";
                 }
             }
             else
             {
-                FinalDraw += "\nPrvo se moraju odigrati svi mečevi u grupama, četvrtfinalni mečevi,\nkao i polufinalni mečevi da bi se formirao finalni par!\n\n";
+                FinalDraw += "\nPrvo se moraju odigrati svi mečevi u grupama, četvrtfinalni mečevi,\nkao i polufinalni mečevi da bi se formirao finalni par i par za treće mesto!\n\n";
             }
             FinalDraw += "\n**************************************************************\n\n";
             Console.Write(FinalDraw);
         }
 
-        public void MakeTheHats(ObservableCollection<Country> final)
+        public void MakeThePots(ObservableCollection<Country> final)
         {
             finalRanking = final;
-            if (!hatsMade)
+            if (!potsMade)
             {
-                HatD.Add(finalRanking[0]);
-                HatD.Add(finalRanking[1]);
+                PotD.Add(finalRanking[0]);
+                PotD.Add(finalRanking[1]);
 
-                HatE.Add(finalRanking[2]);
-                HatE.Add(finalRanking[3]);
+                PotE.Add(finalRanking[2]);
+                PotE.Add(finalRanking[3]);
 
-                HatF.Add(finalRanking[4]);
-                HatF.Add(finalRanking[5]);
+                PotF.Add(finalRanking[4]);
+                PotF.Add(finalRanking[5]);
 
-                HatG.Add(finalRanking[6]);
-                HatG.Add(finalRanking[7]);
+                PotG.Add(finalRanking[6]);
+                PotG.Add(finalRanking[7]);
             }
         }
 
-        public void PrintTheHats(bool can)
+        public void PrintThePots(bool can)
         {
-            Hats = "\n**************************************************************\n\n";
+            Pots = "\n**************************************************************\n\n";
             if (can)
             {
 
-                Hats += "Šeširi:\n\tŠešir D\n\t\t";
-                Hats += HatD[0].Team + "\n\t\t";
-                Hats += HatD[1].Team + "\n\t";
+                Pots += "Šeširi:\n\tŠešir D\n\t\t";
+                Pots += PotD[0].Team + "\n\t\t";
+                Pots += PotD[1].Team + "\n\t";
 
-                Hats += "Šešir E\n\t\t";
-                Hats += HatE[0].Team + "\n\t\t";
-                Hats += HatE[1].Team + "\n\t";
+                Pots += "Šešir E\n\t\t";
+                Pots += PotE[0].Team + "\n\t\t";
+                Pots += PotE[1].Team + "\n\t";
 
-                Hats += "Šešir F\n\t\t";
-                Hats += HatF[0].Team + "\n\t\t";
-                Hats += HatF[1].Team + "\n\t";
+                Pots += "Šešir F\n\t\t";
+                Pots += PotF[0].Team + "\n\t\t";
+                Pots += PotF[1].Team + "\n\t";
 
-                Hats += "Šešir G\n\t\t";
-                Hats += HatG[0].Team + "\n\t\t";
-                Hats += HatG[1].Team;
+                Pots += "Šešir G\n\t\t";
+                Pots += PotG[0].Team + "\n\t\t";
+                Pots += PotG[1].Team;
 
-                hatsMade = true;
+                potsMade = true;
             }
             else
             {
-                Hats += "Prvo se moraju odigrati svi mečevi u grupama da bi se formirali šeširi za narednu fazu takmičenja!";
+                Pots += "Prvo se moraju odigrati svi mečevi u grupama da bi se formirali šeširi za narednu fazu takmičenja!";
             }
-            Hats += "\n\n**************************************************************\n\n";
-            Console.WriteLine(Hats);
+            Pots += "\n\n**************************************************************\n\n";
+            Console.WriteLine(Pots);
         }
     }
 }

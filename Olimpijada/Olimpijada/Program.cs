@@ -58,7 +58,7 @@ void Menu(int result)
             if (groupStageFinished)
             {
                 finalRanking = groupManager.GetFinalRanking();
-                tournamentManager.MakeTheHats(finalRanking);
+                tournamentManager.MakeThePots(finalRanking);
             }
             break;
         case 5:
@@ -71,7 +71,7 @@ void Menu(int result)
             groupManager.PrintFinalRankingInTheGroups();
             break;
         case 8:
-            tournamentManager.PrintTheHats(groupStageFinished);
+            tournamentManager.PrintThePots(groupStageFinished);
             break;
         case 9:
             tournamentManager.SimulateQuearterFinal(groupStageFinished);
@@ -80,7 +80,7 @@ void Menu(int result)
             tournamentManager.SimulateSemiFinal();
             break;
         case 11:
-            tournamentManager.SimulateFinalMatch();
+            tournamentManager.SimulateFinalMatchAndThirdPlaceMatch();
             break;
         case 15:
             break;
