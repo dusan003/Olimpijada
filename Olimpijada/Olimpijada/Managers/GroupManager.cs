@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,16 +16,20 @@ namespace Olimpijada.Managers
 {
     public class GroupManager
     {
-        private Dictionary<string, List<Country>> Groups;
+        private Dictionary<string, ObservableCollection<Country>> Groups;
         private ObservableCollection<Country> Countries = new ObservableCollection<Country>();
         string groupsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase", "groups.json");
         private MatchManager matchManager = new MatchManager();
+
+        private ObservableCollection<Country> finalRanking = new ObservableCollection<Country>();
 
         private string ResultOfFirstRoundOfGroupStage;
         private string ResultOfSecondRoundOfGroupStage;
         private string ResultOfThirdRoundOfGroupStage;
 
         private string AllResultsInTheGroup;
+
+        private string GroupStageStandings;
 
         private static bool firstFinished = false;
         private static bool secondFinished = false;
@@ -32,7 +38,7 @@ namespace Olimpijada.Managers
         public GroupManager()
         {
             string groupsJson = File.ReadAllText(groupsFilePath);
-            Groups = JsonSerializer.Deserialize<Dictionary<string, List<Country>>>(groupsJson);
+            Groups = JsonSerializer.Deserialize<Dictionary<string, ObservableCollection<Country>>>(groupsJson);
             LoadAllCountries();
         }
 
@@ -42,6 +48,7 @@ namespace Olimpijada.Managers
             {
                 foreach (var country in group.Value)
                 {
+                    country.Group = group.Key;
                     Countries.Add(country);
                 }
             }
@@ -49,7 +56,7 @@ namespace Olimpijada.Managers
 
         public void PrintAllGroups()
         {
-            Console.WriteLine("**************************************************************");
+            Console.WriteLine("**************************************************************\n");
             foreach (var group in Groups)
             {
                 Console.WriteLine($"Group {group.Key}:");
@@ -65,12 +72,12 @@ namespace Olimpijada.Managers
                 Console.WriteLine();
             }
 
-            Console.WriteLine("**************************************************************");
+            Console.WriteLine("\n**************************************************************");
         }
 
         public void SimulateTheFirstRoundOfGroupMatches()
         {
-            ResultOfFirstRoundOfGroupStage = "**************************************************************\n";
+            ResultOfFirstRoundOfGroupStage = "\n**************************************************************\n\n";
             if (!firstFinished)
             {
                 ResultOfFirstRoundOfGroupStage += "Grupna faza - I kolo:\n";
@@ -106,13 +113,13 @@ namespace Olimpijada.Managers
             {
                 ResultOfFirstRoundOfGroupStage += "\nPrvo kolo grupne faze je već odigrano!\n\n";
             }
-            ResultOfFirstRoundOfGroupStage += "\n**************************************************************\n";
+            ResultOfFirstRoundOfGroupStage += "\n**************************************************************\n\n";
             Console.Write(ResultOfFirstRoundOfGroupStage);
         }
 
         public void SimulateTheSecondRoundOfGroupMatches()
         {
-            ResultOfSecondRoundOfGroupStage = "**************************************************************\n";
+            ResultOfSecondRoundOfGroupStage = "\n**************************************************************\n\n";
             if (!secondFinished)
             {
                 if (firstFinished)
@@ -167,13 +174,13 @@ namespace Olimpijada.Managers
             {
                 ResultOfSecondRoundOfGroupStage += "\nDrugo kolo grupne faze je već odigrano!\n\n";
             }
-            ResultOfSecondRoundOfGroupStage += "**************************************************************\n";
+            ResultOfSecondRoundOfGroupStage += "\n**************************************************************\n\n";
             Console.Write(ResultOfSecondRoundOfGroupStage);
         }
 
-        public void SimulateTheThirdRoundOfGroupMatches()
+        public bool SimulateTheThirdRoundOfGroupMatches()
         {
-            ResultOfThirdRoundOfGroupStage = "**************************************************************\n";
+            ResultOfThirdRoundOfGroupStage = "\n**************************************************************\n\n";
             if (!thirdFinished)
             {
                 if (firstFinished)
@@ -220,6 +227,7 @@ namespace Olimpijada.Managers
                         }
                         thirdFinished = true;
                         AllResultsInTheGroup += ResultOfThirdRoundOfGroupStage;
+                        finalRanking = RankTopTeamsAcrossGroups();
                     }
                     else
                     {
@@ -235,8 +243,9 @@ namespace Olimpijada.Managers
             {
                 ResultOfThirdRoundOfGroupStage += "\nTreće kolo grupne faze je već odigrano!\n\n";
             }
-            ResultOfThirdRoundOfGroupStage += "**************************************************************\n";
+            ResultOfThirdRoundOfGroupStage += "\n**************************************************************\n\n";
             Console.Write(ResultOfThirdRoundOfGroupStage);
+            return thirdFinished;
         }
 
         public void SaveTheMatch(Match matchForFirstTeam, Match matchForSecondTeam, int firstIndex, int secondIndex, int result1, int result2)
@@ -277,13 +286,13 @@ namespace Olimpijada.Managers
 
             foreach (var group in Groups)
             {
-                result += $"Grupa {group.Key} (Ime - pobede/porazi/bodovi/postignuti koševi/primljeni koševi/koš razlika)::\n";
+                result += $"\nGrupa {group.Key} (Ime - pobede/porazi/bodovi/postignuti koševi/primljeni koševi/koš razlika)::\n";
 
                 foreach (var team in group.Value)
                 {
                     temp.Add(team);
                 }
-                ranked = RankTeams(temp);
+                ranked = RankTeamsInGroups(temp);
                 int counter = 1;
                 foreach (var team in ranked)
                 {
@@ -311,7 +320,7 @@ namespace Olimpijada.Managers
 
         }
 
-        public ObservableCollection<Country> RankTeams(ObservableCollection<Country> teams)
+        public ObservableCollection<Country> RankTeamsInGroups(ObservableCollection<Country> teams)
         {
 
             var rankedTeams = teams.OrderByDescending(t => t.Points).ToList();
@@ -389,6 +398,7 @@ namespace Olimpijada.Managers
         {
             if (firstFinished && secondFinished && thirdFinished)
             {
+                AllResultsInTheGroup += "\n**************************************************************\n\n";
                 Console.WriteLine(AllResultsInTheGroup);
             }
             else
@@ -400,5 +410,97 @@ namespace Olimpijada.Managers
             }
         }
 
+        public ObservableCollection<Country> RankTopTeamsAcrossGroups()
+        {
+
+            ObservableCollection<Country> firstPlaceTeams = new ObservableCollection<Country>();
+            ObservableCollection<Country> secondPlaceTeams = new ObservableCollection<Country>();
+            ObservableCollection<Country> thirdPlaceTeams = new ObservableCollection<Country>();
+            ObservableCollection<Country> fourthPlaceTeams = new ObservableCollection<Country>();
+
+            foreach (var group in Groups)
+            {
+                ObservableCollection<Country> rankedTeams = RankTeamsInGroups(group.Value);
+                firstPlaceTeams.Add(rankedTeams[0]);
+                secondPlaceTeams.Add(rankedTeams[1]);
+                thirdPlaceTeams.Add(rankedTeams[2]);
+                fourthPlaceTeams.Add(rankedTeams[3]);
+            }
+
+            ObservableCollection<Country> rankedFirstPlaceTeams = RankTeamsForFinalGroupStageStanding(firstPlaceTeams);
+            AddTeamsToFinalRanking(finalRanking, rankedFirstPlaceTeams);
+
+            ObservableCollection<Country> rankedSecondPlaceTeams = RankTeamsForFinalGroupStageStanding(secondPlaceTeams);
+            AddTeamsToFinalRanking(finalRanking, rankedSecondPlaceTeams);
+
+            ObservableCollection<Country> rankedThirdPlaceTeams = RankTeamsForFinalGroupStageStanding(thirdPlaceTeams);
+            AddTeamsToFinalRanking(finalRanking, rankedThirdPlaceTeams);
+
+            ObservableCollection<Country> rankedFourthPlaceTeams = RankTeamsForFinalGroupStageStanding(fourthPlaceTeams);
+            AddTeamsToFinalRanking(finalRanking, rankedFourthPlaceTeams);
+
+
+            return finalRanking;
+        }
+
+        public ObservableCollection<Country> GetFinalRanking()
+        {
+            return finalRanking;
+        }
+
+        private ObservableCollection<Country> RankTeamsForFinalGroupStageStanding(ObservableCollection<Country> teams)
+        {
+            return new ObservableCollection<Country>(
+                teams.OrderByDescending(t => t.Points)
+                     .ThenByDescending(t => t.ScoredPoints - t.ConcededPoints)
+                     .ThenByDescending(t => t.ScoredPoints));
+        }
+
+        private void AddTeamsToFinalRanking(ObservableCollection<Country> finalRanking, ObservableCollection<Country> rankedTeams)
+        {
+            for (int i = 0; i < rankedTeams.Count; i++)
+            {
+                finalRanking.Add(rankedTeams[i]);
+            }
+        }
+
+        public void PrintFinalRankingInTheGroups()
+        {
+            string GroupStageStandings = "**************************************************************\n\n";
+            if (firstFinished && secondFinished && thirdFinished)
+            {
+                GroupStageStandings += "Konačni plasman timova nakon grupne faze:\n";
+
+                int position = 1;
+                foreach (Country team in finalRanking)
+                {
+                    string pointDifference = (team.ScoredPoints - team.ConcededPoints) >= 0
+                                                    ? $"+{team.ScoredPoints - team.ConcededPoints}"
+                                                    : $"{team.ScoredPoints - team.ConcededPoints}";
+
+                    if (team.Team.Equals("Sjedinjene Države") || position >= 10) // samo zbog lepseg izgleda
+                    {
+                        GroupStageStandings += $"\t{position}. {team.Team,-12}\t {team.Wins} / {team.Defeats} / {team.Points} / {team.ScoredPoints} / {team.ConcededPoints} / {pointDifference}\n";
+                        position++;
+                    }
+                    else
+                    {
+                        GroupStageStandings += $"\t{position}. {team.Team,-12}\t\t {team.Wins} / {team.Defeats} / {team.Points} / {team.ScoredPoints} / {team.ConcededPoints} / {pointDifference}\n";
+                        position++;
+                    }
+                    if (position == 9)
+                    {
+                        GroupStageStandings += "----------------------------------------------------------------------\n";
+                    }
+                }
+            }
+            else
+            {
+                GroupStageStandings += "Prvo se moraju odigrati svi mečevi u grupama da bi se timovi rangirali za prolazak u narednu fazu takmičenja!\n\n";
+            }
+
+            GroupStageStandings += "\n**************************************************************\n\n";
+            Console.WriteLine(GroupStageStandings);
+        }
     }
 }

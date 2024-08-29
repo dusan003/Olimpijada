@@ -13,6 +13,7 @@ namespace Olimpijada.Models
         public string Team { get; set; }
         public string ISOCode { get; set; }
         public int FIBARanking { get; set; }
+        public string Group { get; set; }
         public int Points { get; set; }
         public int Wins { get; set; }
         public int Defeats { get; set; }
