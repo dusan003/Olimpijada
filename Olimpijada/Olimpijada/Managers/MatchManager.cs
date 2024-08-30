@@ -1,6 +1,7 @@
 ﻿using Olimpijada.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,13 @@ namespace Olimpijada.Managers
 {
     public class MatchManager
     {
+        public ObservableCollection<Country> Countries { get; set; }
+
+        public MatchManager(ObservableCollection<Country> countries) 
+        {
+            this.Countries = countries;
+        }
+
         public int[] SimulateMatch(Country team1, Country team2)
         {
             int[] result = new int[2];
@@ -22,7 +30,7 @@ namespace Olimpijada.Managers
             }
             result[0] = score1;
             result[1] = score2;
-            return (result);
+            return result;
         }
     }
 }

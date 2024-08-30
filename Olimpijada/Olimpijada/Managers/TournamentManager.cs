@@ -15,9 +15,10 @@ namespace Olimpijada.Managers
     public class TournamentManager
     {
 
-        private MatchManager matchManager = new MatchManager();
+        private MatchManager matchManager;
 
         private ObservableCollection<Country> finalRanking = new ObservableCollection<Country>();
+        private ObservableCollection<Country> Countries = new ObservableCollection<Country>();
 
         ObservableCollection<Country> PotD = new ObservableCollection<Country>();
         ObservableCollection<Country> PotE = new ObservableCollection<Country>();
@@ -51,10 +52,12 @@ namespace Olimpijada.Managers
         private string QuarterFinalDraw;
         private string SemiFinalDraw;
         private string FinalDraw;
+        private string AllResultsInKnockoutStage = "";
 
-        public TournamentManager() 
+        public TournamentManager(ObservableCollection<Country> countries)
         {
-
+            Countries = countries;
+            matchManager = new MatchManager(Countries);
         }
 
         private void MakeThePairsOfQuarterFinal()
@@ -178,6 +181,8 @@ namespace Olimpijada.Managers
                         SemiFinalPair2.Add(QuarterFinalPair4[1]);
                     }
 
+                    AllResultsInKnockoutStage += QuarterFinalDraw;
+
                     QuarterFinalDraw += "\nPolufinalni mečevi:\n\n" + "\t" + SemiFinalPair1[0].Team + " - " + SemiFinalPair1[1].Team;
                     QuarterFinalDraw += "\n\t" + SemiFinalPair2[0].Team + " - " + SemiFinalPair2[1].Team + "\n";
 
@@ -245,6 +250,8 @@ namespace Olimpijada.Managers
                         ThirdPlacePair.Add(SemiFinalPair2[0]);
                     }
 
+                    AllResultsInKnockoutStage += SemiFinalDraw;
+
                     SemiFinalDraw += "\nFinale:\n\n" + "\t" + FinalPair[0].Team + " - " + FinalPair[1].Team + "\n";
                     SemiFinalDraw += "\nUtakmica za treće mesto:\n\n" + "\t" + ThirdPlacePair[0].Team + " - " + ThirdPlacePair[1].Team + "\n";
 
@@ -311,13 +318,15 @@ namespace Olimpijada.Managers
                         Medals.Add(ThirdPlacePair[1]);
                     }
 
-                    FinalDraw += "\nMedalje:\n\n\t" + "1." + Medals[0].Team + "\n\t" + "2." + Medals[1].Team + "\n\t3." + Medals[2].Team + "\n\n";
+                    FinalDraw += RankTopThreeTeamsForMedals();
+
+                    AllResultsInKnockoutStage += FinalDraw;
 
                     simulateFinalFinished = true;
                 }
                 else
                 {
-                    FinalDraw += "\nFinalna utakmica i utakmica za treće messto su već odigrane!\n\n";
+                    FinalDraw += "\nFinalna utakmica i utakmica za treće mesto su već odigrane!\n\n";
                 }
             }
             else
@@ -326,6 +335,43 @@ namespace Olimpijada.Managers
             }
             FinalDraw += "\n**************************************************************\n\n";
             Console.Write(FinalDraw);
+        }
+
+        private string RankTopThreeTeamsForMedals()
+        {
+            return "\nMedalje:\n\n\t" + "1." + Medals[0].Team + "\n\t" + "2." + Medals[1].Team + "\n\t3." + Medals[2].Team + "\n";
+        }
+
+        public void PrintTopThreeTeams()
+        {
+            string result = "\n**************************************************************\n";
+            if (simulateFinalFinished)
+            {
+                result += RankTopThreeTeamsForMedals();
+            }
+            else
+            {
+                result += "\n\nPrvo se moraju odigrati svi mečevi turnira da bi se rangirali timovi koji su osvojili medalje!\n\n";
+            }
+            result += "\n**************************************************************\n";
+            
+            Console.WriteLine(result);
+        }
+
+        public void PrintCurrentResultsOfKnockoutStage()
+        {
+            if(!simulateQuarterFinalFinished || !simulateSemiFinalFinished || !simulateFinalFinished)
+            {
+                string ret = "\n**************************************************************\n\n\n";
+                ret += "Prvo se moraju odigrati svi mečevi na turniru\n\n";
+                ret += "\n**************************************************************\n\n";
+                Console.WriteLine(ret);
+            }
+            else
+            {
+                AllResultsInKnockoutStage += "\n**************************************************************\n";
+                Console.WriteLine(AllResultsInKnockoutStage);
+            }
         }
 
         public void MakeThePots(ObservableCollection<Country> final)
@@ -385,7 +431,7 @@ namespace Olimpijada.Managers
             }
             else
             {
-                Pots += "Prvo se moraju odigrati svi mečevi u grupama da bi se formirali šeširi za narednu fazu takmičenja!";
+                Pots += "\nPrvo se moraju odigrati svi mečevi u grupama da bi se formirali šeširi za narednu fazu takmičenja!\n";
             }
             Pots += "\n\n**************************************************************\n\n";
             Console.WriteLine(Pots);

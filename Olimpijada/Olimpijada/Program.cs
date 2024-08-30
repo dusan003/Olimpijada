@@ -7,11 +7,14 @@ using System.Collections.ObjectModel;
 
 string groupsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase", "groups.json");
 
-TournamentManager tournamentManager = new TournamentManager();
 GroupManager groupManager = new GroupManager();
-MatchManager matchManager = new MatchManager();
 
 ObservableCollection<Country> finalRanking = new ObservableCollection<Country>();
+ObservableCollection<Country> Countries = new ObservableCollection<Country>();
+
+Countries = groupManager.GetAllCountries();
+MatchManager matchManager = new MatchManager(Countries);
+TournamentManager tournamentManager = new TournamentManager(Countries);
 
 int result;
 bool groupStageFinished = false;
@@ -33,6 +36,8 @@ do
     Console.WriteLine("\t9)Simuliraj četvrtfinale");
     Console.WriteLine("\t10)Simuliraj polufinale");
     Console.WriteLine("\t11)Simuliraj finale");
+    Console.WriteLine("\t12)Ispiši timove koji su osvojili medalje");
+    Console.WriteLine("\t13)Ispiši rezultate nokaut faze turnira");
     Console.WriteLine("\t15)Izlaz iz simulacije");
 
     Int32.TryParse(Console.ReadLine(), out result);
@@ -81,6 +86,15 @@ void Menu(int result)
             break;
         case 11:
             tournamentManager.SimulateFinalMatchAndThirdPlaceMatch();
+            break;
+        case 12:
+            tournamentManager.PrintTopThreeTeams();
+            break;
+        case 13:
+            tournamentManager.PrintCurrentResultsOfKnockoutStage();
+            break;
+        case 14:
+            groupManager.PrintAllMechesForUsa();
             break;
         case 15:
             break;

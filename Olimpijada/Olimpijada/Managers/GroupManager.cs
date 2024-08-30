@@ -1,14 +1,17 @@
 ﻿using Olimpijada.Models;
+using Olimpijada.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.Metrics;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -17,9 +20,11 @@ namespace Olimpijada.Managers
     public class GroupManager
     {
         private Dictionary<string, ObservableCollection<Country>> Groups;
+        private Dictionary<string, ObservableCollection<Match>> ExibitionMatches;
         private ObservableCollection<Country> Countries = new ObservableCollection<Country>();
         string groupsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase", "groups.json");
-        private MatchManager matchManager = new MatchManager();
+        string exibitionsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase", "exibitions.json");
+        private MatchManager matchManager;
 
         private ObservableCollection<Country> finalRanking = new ObservableCollection<Country>();
 
@@ -37,9 +42,17 @@ namespace Olimpijada.Managers
 
         public GroupManager()
         {
+            var options = new JsonSerializerOptions
+            {
+                Converters = { new CustomDateTimeConverter() }
+            };
             string groupsJson = File.ReadAllText(groupsFilePath);
             Groups = JsonSerializer.Deserialize<Dictionary<string, ObservableCollection<Country>>>(groupsJson);
+            string exibitionsJson = File.ReadAllText(exibitionsFilePath);
+            ExibitionMatches = JsonSerializer.Deserialize<Dictionary<string, ObservableCollection<Match>>>(exibitionsJson, options);
             LoadAllCountries();
+            LoadExibitionMatches();
+            matchManager = new MatchManager(Countries);
         }
 
         private void LoadAllCountries()
@@ -51,6 +64,44 @@ namespace Olimpijada.Managers
                     country.Group = group.Key;
                     Countries.Add(country);
                 }
+            }
+        }
+
+        public ObservableCollection<Country> GetAllCountries()
+        {
+            return Countries;
+        }
+
+        private void LoadExibitionMatches()
+        {
+            foreach (var country in Countries)
+            {
+                if (ExibitionMatches.ContainsKey(country.ISOCode))
+                {
+                    foreach (var match in ExibitionMatches[country.ISOCode])
+                    {
+                        country.ExibitionMatches.Add(match);
+                    }
+                    ProcessExibitionsMatchesForCountry(country);
+                }
+            }
+        }
+
+        private void ProcessExibitionsMatchesForCountry(Country country)
+        {
+            foreach(Match match in country.ExibitionMatches)
+            {
+                int[] scores = match.Result.Split('-').Select(int.Parse).ToArray();
+                if (scores[0] > scores[1])
+                {
+                    country.TotalWins++;
+                }
+                else
+                {
+                    country.TotalDefeats++;
+                }
+                country.TotalScoredPoints += scores[0];
+                country.TotalConcededPoints += scores[1];
             }
         }
 
@@ -178,6 +229,19 @@ namespace Olimpijada.Managers
             Console.Write(ResultOfSecondRoundOfGroupStage);
         }
 
+        public void PrintAllMechesForUsa()
+        {
+            string ret = "";
+            foreach(Country team in Countries)
+            {
+                if (team.ISOCode.Equals("SRB"))
+                {
+                    ret += "Primljeni: " + team.TotalConcededPoints + "\n";
+                }
+            }
+            Console.Write(ret);
+        }
+
         public bool SimulateTheThirdRoundOfGroupMatches()
         {
             ResultOfThirdRoundOfGroupStage = "\n**************************************************************\n\n";
@@ -222,6 +286,7 @@ namespace Olimpijada.Managers
 
                                     ResultOfThirdRoundOfGroupStage += "\t\t" + Group[1].Team + " - " + Group[2].Team + " (" + result[0] + ":" + result[1] + ")\n";
                                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
+
                                 }
                             }
                         }
@@ -403,9 +468,9 @@ namespace Olimpijada.Managers
             }
             else
             {
-                string ret = "\n**************************************************************\n\n";
+                string ret = "\n**************************************************************\n\n\n";
                 ret += "Nisu odigrani svi mečevi u grupi!";
-                ret += "\n\n**************************************************************\n";
+                ret += "\n\n\n**************************************************************\n";
                 Console.WriteLine(ret);
             }
         }
@@ -466,7 +531,7 @@ namespace Olimpijada.Managers
 
         public void PrintFinalRankingInTheGroups()
         {
-            string GroupStageStandings = "**************************************************************\n\n";
+            GroupStageStandings = "**************************************************************\n\n";
             if (firstFinished && secondFinished && thirdFinished)
             {
                 GroupStageStandings += "Konačni plasman timova nakon grupne faze:\n";
@@ -496,10 +561,10 @@ namespace Olimpijada.Managers
             }
             else
             {
-                GroupStageStandings += "Prvo se moraju odigrati svi mečevi u grupama da bi se timovi rangirali za prolazak u narednu fazu takmičenja!\n\n";
+                GroupStageStandings += "\nPrvo se moraju odigrati svi mečevi u grupama da bi se timovi rangirali za prolazak u narednu fazu takmičenja!\n";
             }
 
-            GroupStageStandings += "\n**************************************************************\n\n";
+            GroupStageStandings += "\n\n**************************************************************\n\n";
             Console.WriteLine(GroupStageStandings);
         }
     }

@@ -19,7 +19,13 @@ namespace Olimpijada.Models
         public int Defeats { get; set; }
         public int ScoredPoints { get; set; }
         public int ConcededPoints { get; set; }
+        public int TotalWins { get; set; }
+        public int TotalDefeats { get; set; }
+        public int TotalScoredPoints { get; set; }
+        public int TotalConcededPoints { get; set; }
+
 
         public ObservableCollection<Match> Matches { get; set; } = new ObservableCollection<Match>();
+        public ObservableCollection<Match> ExibitionMatches { get; set; } = new ObservableCollection<Match>();
     }
 }
