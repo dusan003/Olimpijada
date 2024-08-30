@@ -13,7 +13,6 @@ ObservableCollection<Country> finalRanking = new ObservableCollection<Country>()
 ObservableCollection<Country> Countries = new ObservableCollection<Country>();
 
 Countries = groupManager.GetAllCountries();
-MatchManager matchManager = new MatchManager(Countries);
 TournamentManager tournamentManager = new TournamentManager(Countries);
 
 int result;
@@ -60,6 +59,8 @@ void Menu(int result)
             break;
         case 4:
             groupStageFinished = groupManager.SimulateTheThirdRoundOfGroupMatches();
+            Countries = groupManager.GetAllCountries();
+            tournamentManager = new TournamentManager(Countries);
             if (groupStageFinished)
             {
                 finalRanking = groupManager.GetFinalRanking();

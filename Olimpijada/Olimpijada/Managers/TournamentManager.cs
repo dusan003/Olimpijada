@@ -122,7 +122,7 @@ namespace Olimpijada.Managers
                     Match matchForSecondTeam = new Match(DateTime.Now, QuarterFinalPair1[0].ISOCode, result[1] + ":" + result[0]);
 
                     QuarterFinalDraw += "\t" + QuarterFinalPair1[0].Team + " - " + QuarterFinalPair1[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
-                    //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
+                    SaveTheMatch(matchForFirstTeam, matchForSecondTeam, QuarterFinalPair1[0], QuarterFinalPair1[1], result[0], result[1]);
 
                     if (result[0] > result[1])
                     {
@@ -138,7 +138,7 @@ namespace Olimpijada.Managers
                     matchForSecondTeam = new Match(DateTime.Now, QuarterFinalPair2[0].ISOCode, result[1] + ":" + result[0]);
 
                     QuarterFinalDraw += "\t" + QuarterFinalPair2[0].Team + " - " + QuarterFinalPair2[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
-                    //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
+                    SaveTheMatch(matchForFirstTeam, matchForSecondTeam, QuarterFinalPair2[0], QuarterFinalPair2[1], result[0], result[1]);
 
                     if (result[0] > result[1])
                     {
@@ -154,7 +154,7 @@ namespace Olimpijada.Managers
                     matchForSecondTeam = new Match(DateTime.Now, QuarterFinalPair3[0].ISOCode, result[1] + ":" + result[0]);
 
                     QuarterFinalDraw += "\t" + QuarterFinalPair3[0].Team + " - " + QuarterFinalPair3[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
-                    //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
+                    SaveTheMatch(matchForFirstTeam, matchForSecondTeam, QuarterFinalPair3[0], QuarterFinalPair3[1], result[0], result[1]);
 
                     if (result[0] > result[1])
                     {
@@ -170,7 +170,7 @@ namespace Olimpijada.Managers
                     matchForSecondTeam = new Match(DateTime.Now, QuarterFinalPair4[0].ISOCode, result[1] + ":" + result[0]);
 
                     QuarterFinalDraw += "\t" + QuarterFinalPair4[0].Team + " - " + QuarterFinalPair4[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
-                    //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
+                    SaveTheMatch(matchForFirstTeam, matchForSecondTeam, QuarterFinalPair4[0], QuarterFinalPair4[1], result[0], result[1]);
 
                     if (result[0] > result[1])
                     {
@@ -219,7 +219,7 @@ namespace Olimpijada.Managers
                     Match matchForSecondTeam = new Match(DateTime.Now, SemiFinalPair1[0].ISOCode, result[1] + ":" + result[0]);
 
                     SemiFinalDraw += "\t" + SemiFinalPair1[0].Team + " - " + SemiFinalPair1[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
-                    //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
+                    SaveTheMatch(matchForFirstTeam, matchForSecondTeam, SemiFinalPair1[0], SemiFinalPair1[1], result[0], result[1]);
 
                     if (result[0] > result[1])
                     {
@@ -237,7 +237,7 @@ namespace Olimpijada.Managers
                     matchForSecondTeam = new Match(DateTime.Now, SemiFinalPair2[0].ISOCode, result[1] + ":" + result[0]);
 
                     SemiFinalDraw += "\t" + SemiFinalPair2[0].Team + " - " + SemiFinalPair2[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
-                    //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
+                    SaveTheMatch(matchForFirstTeam, matchForSecondTeam, SemiFinalPair2[0], SemiFinalPair2[0], result[0], result[1]);
 
                     if (result[0] > result[1])
                     {
@@ -287,7 +287,7 @@ namespace Olimpijada.Managers
                     Match matchForSecondTeam = new Match(DateTime.Now, FinalPair[0].ISOCode, result[1] + ":" + result[0]);
 
                     FinalDraw += "\t" + FinalPair[0].Team + " - " + FinalPair[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
-                    //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
+                    SaveTheMatch(matchForFirstTeam, matchForSecondTeam, FinalPair[0], FinalPair[1], result[0], result[1]);
 
                     if (result[0] > result[1])
                     {
@@ -307,7 +307,7 @@ namespace Olimpijada.Managers
                     matchForSecondTeam = new Match(DateTime.Now, ThirdPlacePair[0].ISOCode, result[1] + ":" + result[0]);
 
                     FinalDraw += "\t" + ThirdPlacePair[0].Team + " - " + ThirdPlacePair[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
-                    //SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
+                    SaveTheMatch(matchForFirstTeam, matchForSecondTeam, ThirdPlacePair[0], ThirdPlacePair[1], result[0], result[1]);
 
                     if (result[0] > result[1])
                     {
@@ -335,6 +335,46 @@ namespace Olimpijada.Managers
             }
             FinalDraw += "\n**************************************************************\n\n";
             Console.Write(FinalDraw);
+        }
+
+        public void SaveTheMatch(Match matchForFirstTeam, Match matchForSecondTeam, Country team1, Country team2, int result1, int result2)
+        {
+            int firstIndex = Countries.IndexOf(team1);
+            int secondIndex = Countries.IndexOf(team2);
+
+            Countries[firstIndex].Matches.Add(matchForFirstTeam);
+            Countries[secondIndex].Matches.Add(matchForSecondTeam);
+
+            if (result1 > result2)
+            {
+                Countries[firstIndex].Points += 2;
+                Countries[secondIndex].Points += 1;
+
+                Countries[firstIndex].Wins++;
+                Countries[secondIndex].Defeats++;
+                Countries[firstIndex].TotalWins++;
+                Countries[secondIndex].TotalDefeats++;
+            }
+            else
+            {
+                Countries[firstIndex].Points += 1;
+                Countries[secondIndex].Points += 2;
+
+                Countries[secondIndex].Wins++;
+                Countries[firstIndex].Defeats++;
+                Countries[secondIndex].TotalWins++;
+                Countries[firstIndex].TotalDefeats++;
+            }
+
+            Countries[firstIndex].ScoredPoints += result1;
+            Countries[secondIndex].ScoredPoints += result2;
+            Countries[firstIndex].TotalScoredPoints += result1;
+            Countries[secondIndex].TotalScoredPoints += result2;
+
+            Countries[firstIndex].ConcededPoints += result2;
+            Countries[secondIndex].ConcededPoints += result1;
+            Countries[firstIndex].TotalConcededPoints += result2;
+            Countries[secondIndex].TotalConcededPoints += result1;
         }
 
         private string RankTopThreeTeamsForMedals()

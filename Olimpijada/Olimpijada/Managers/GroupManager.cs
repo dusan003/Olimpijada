@@ -324,6 +324,8 @@ namespace Olimpijada.Managers
 
                 Countries[firstIndex].Wins ++;
                 Countries[secondIndex].Defeats ++;
+                Countries[firstIndex].TotalWins++;
+                Countries[secondIndex].TotalDefeats++;
             }
             else
             {
@@ -332,13 +334,19 @@ namespace Olimpijada.Managers
 
                 Countries[secondIndex].Wins++;
                 Countries[firstIndex].Defeats++;
+                Countries[secondIndex].TotalWins++;
+                Countries[firstIndex].TotalDefeats++;
             }
 
             Countries[firstIndex].ScoredPoints += result1;
             Countries[secondIndex].ScoredPoints += result2;
+            Countries[firstIndex].TotalScoredPoints += result1;
+            Countries[secondIndex].TotalScoredPoints += result2;
 
             Countries[firstIndex].ConcededPoints += result2;
             Countries[secondIndex].ConcededPoints += result1;
+            Countries[firstIndex].TotalConcededPoints += result2;
+            Countries[secondIndex].TotalConcededPoints += result1;
         }
 
         public void PrintCurrentGroupState()
