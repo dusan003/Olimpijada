@@ -39,6 +39,8 @@ namespace Olimpijada.Managers
         private static bool firstFinished = false;
         private static bool secondFinished = false;
         private static bool thirdFinished = false;
+        private static bool winningChanceEnabled = true;
+        private static bool predictMatchesEnabled = true;
 
         public GroupManager()
         {
@@ -152,7 +154,15 @@ namespace Olimpijada.Managers
                             Match matchForFirstTeam = new Match(DateTime.Now, Group[secondIndex].ISOCode, result[0] + ":" + result[1]);
                             Match matchForSecondTeam = new Match(DateTime.Now, Group[firstIndex].ISOCode, result[1] + ":" + result[0]);
 
-                            ResultOfFirstRoundOfGroupStage += "\t\t" + Group[firstIndex].Team + " - " + Group[secondIndex].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                            
+                            if (!winningChanceEnabled)
+                            {
+                                ResultOfFirstRoundOfGroupStage += "\t\t" + Group[firstIndex].Team + " - " + Group[secondIndex].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                            }
+                            else
+                            {
+                                ResultOfFirstRoundOfGroupStage += MakeTheWinningChancesForTheMatch(Group[firstIndex], Group[secondIndex], result[0], result[1]);
+                            }
                             SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
                         }
                     }
@@ -164,7 +174,7 @@ namespace Olimpijada.Managers
             {
                 ResultOfFirstRoundOfGroupStage += "\nPrvo kolo grupne faze je već odigrano!\n\n";
             }
-            ResultOfFirstRoundOfGroupStage += "\n**************************************************************\n\n";
+            ResultOfFirstRoundOfGroupStage += "\n\n**************************************************************\n\n";
             Console.Write(ResultOfFirstRoundOfGroupStage);
         }
 
@@ -198,7 +208,14 @@ namespace Olimpijada.Managers
                                 Match matchForFirstTeam = new Match(DateTime.Now, Group[2].ISOCode, result[0] + ":" + result[1]);
                                 Match matchForSecondTeam = new Match(DateTime.Now, Group[0].ISOCode, result[1] + ":" + result[0]);
 
-                                ResultOfSecondRoundOfGroupStage += "\t\t" + Group[0].Team + " - " + Group[2].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                                if (!winningChanceEnabled)
+                                {
+                                    ResultOfSecondRoundOfGroupStage += "\t\t" + Group[0].Team + " - " + Group[2].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                                }
+                                else
+                                {
+                                    ResultOfSecondRoundOfGroupStage += MakeTheWinningChancesForTheMatch(Group[0], Group[2], result[0], result[1]);
+                                }
                                 SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
                                 firstIndex++; // sada su 2 i 4 ekipa
@@ -208,7 +225,14 @@ namespace Olimpijada.Managers
                                 matchForFirstTeam = new Match(DateTime.Now, Group[3].ISOCode, result[0] + ":" + result[1]);
                                 matchForSecondTeam = new Match(DateTime.Now, Group[1].ISOCode, result[1] + ":" + result[0]);
 
-                                ResultOfSecondRoundOfGroupStage += "\t\t" + Group[1].Team + " - " + Group[3].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                                if (!winningChanceEnabled)
+                                {
+                                    ResultOfSecondRoundOfGroupStage += "\t\t" + Group[1].Team + " - " + Group[3].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                                }
+                                else
+                                {
+                                    ResultOfSecondRoundOfGroupStage += MakeTheWinningChancesForTheMatch(Group[1], Group[3], result[0], result[1]);
+                                }
                                 SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
                             }
                         }
@@ -227,19 +251,6 @@ namespace Olimpijada.Managers
             }
             ResultOfSecondRoundOfGroupStage += "\n**************************************************************\n\n";
             Console.Write(ResultOfSecondRoundOfGroupStage);
-        }
-
-        public void PrintAllMechesForUsa()
-        {
-            string ret = "";
-            foreach(Country team in Countries)
-            {
-                if (team.ISOCode.Equals("SRB"))
-                {
-                    ret += "Primljeni: " + team.TotalConcededPoints + "\n";
-                }
-            }
-            Console.Write(ret);
         }
 
         public bool SimulateTheThirdRoundOfGroupMatches()
@@ -274,7 +285,14 @@ namespace Olimpijada.Managers
                                     Match matchForFirstTeam = new Match(DateTime.Now, Group[3].ISOCode, result[0] + ":" + result[1]);
                                     Match matchForSecondTeam = new Match(DateTime.Now, Group[0].ISOCode, result[1] + ":" + result[0]);
 
-                                    ResultOfThirdRoundOfGroupStage += "\t\t" + Group[0].Team + " - " + Group[3].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                                    if (!winningChanceEnabled)
+                                    {
+                                        ResultOfThirdRoundOfGroupStage += "\t\t" + Group[0].Team + " - " + Group[3].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                                    }
+                                    else
+                                    {
+                                        ResultOfThirdRoundOfGroupStage += MakeTheWinningChancesForTheMatch(Group[0], Group[3], result[0], result[1]);
+                                    }
                                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
                                     firstIndex++; // sada su 2 i 3 ekipa
@@ -284,7 +302,14 @@ namespace Olimpijada.Managers
                                     matchForFirstTeam = new Match(DateTime.Now, Group[2].ISOCode, result[0] + ":" + result[1]);
                                     matchForSecondTeam = new Match(DateTime.Now, Group[1].ISOCode, result[1] + ":" + result[0]);
 
-                                    ResultOfThirdRoundOfGroupStage += "\t\t" + Group[1].Team + " - " + Group[2].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                                    if (!winningChanceEnabled)
+                                    {
+                                        ResultOfThirdRoundOfGroupStage += "\t\t" + Group[1].Team + " - " + Group[2].Team + " (" + result[0] + ":" + result[1] + ")\n";
+                                    }
+                                    else
+                                    {
+                                        ResultOfThirdRoundOfGroupStage += MakeTheWinningChancesForTheMatch(Group[1], Group[2], result[0], result[1]);
+                                    }
                                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
                                 }
@@ -311,6 +336,15 @@ namespace Olimpijada.Managers
             ResultOfThirdRoundOfGroupStage += "\n**************************************************************\n\n";
             Console.Write(ResultOfThirdRoundOfGroupStage);
             return thirdFinished;
+        }
+
+        private string MakeTheWinningChancesForTheMatch(Country team1, Country team2, int score1, int score2)
+        {
+            string winningChances = matchManager.CalculateWinningChances(team1, team2);
+            string formattedResult = $"{team1.Team} - {team2.Team} ({score1}:{score2})";
+            formattedResult = formattedResult.PadRight(40);
+
+            return "\t\t" + formattedResult + winningChances + "\n";
         }
 
         public void SaveTheMatch(Match matchForFirstTeam, Match matchForSecondTeam, int firstIndex, int secondIndex, int result1, int result2)
@@ -574,6 +608,26 @@ namespace Olimpijada.Managers
 
             GroupStageStandings += "\n\n**************************************************************\n\n";
             Console.WriteLine(GroupStageStandings);
+        }
+
+        public void EnableChanceWinningPrediction()
+        {
+            winningChanceEnabled = true;
+        }
+
+        public void DisableChanceWinningPrediction()
+        {
+            winningChanceEnabled = false;
+        }
+
+        public void EnableMatchPrediction()
+        {
+            predictMatchesEnabled = true;
+        }
+
+        public void DisableMatchPrediction()
+        {
+            predictMatchesEnabled = false;
         }
     }
 }

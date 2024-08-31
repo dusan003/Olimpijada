@@ -50,8 +50,44 @@ namespace Olimpijada.Managers
             int teamRankingDifference = opponent.FIBARanking - team.FIBARanking;
 
             int total = (int)(winForm * winFormWeight + totalScoreDifference * scoreDifferenceWeight + teamRankingDifference * rankingDifferenceWeight);
-            Console.WriteLine(total + "\n" + "Score dif: " + teamRankingDifference + "\nTotal wins: " + team.TotalWins + "\nTotal defeats : " + team.TotalDefeats);
             return total;
         }
+
+        public string CalculateWinningChances(Country team1, Country team2)
+        {
+            int teamForm1 = CalculateFormFactor(team1, team2);
+            int teamForm2 = CalculateFormFactor(team2, team1);
+            int formDifference;
+            double team1WinningChance;
+            double team2WinningChance;
+
+            if (teamForm1 < 0 && teamForm2 > 0)
+            {
+                formDifference = teamForm2 - teamForm1;
+                team1WinningChance = 50 - formDifference;
+                team2WinningChance = 50 + formDifference;
+            }
+            else if(teamForm1 > 0 && teamForm2 < 0)
+            {
+                formDifference = teamForm1 - teamForm2;
+                team1WinningChance = 50 + formDifference;
+                team2WinningChance = 50 - formDifference;
+            }
+            else if(teamForm1 > teamForm2)
+            {
+                formDifference = teamForm1 - teamForm2;
+                team1WinningChance = 50 + formDifference;
+                team2WinningChance = 50 - formDifference;
+            }
+            else
+            {
+                formDifference = teamForm2 - teamForm1;
+                team1WinningChance = 50 - formDifference;
+                team2WinningChance = 50 + formDifference;
+            }
+
+            return $"Šanse za pobedu: ({team1WinningChance}% - {team2WinningChance}%)";
+        }
+
     }
 }
