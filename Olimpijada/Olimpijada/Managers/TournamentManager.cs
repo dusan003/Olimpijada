@@ -15,7 +15,7 @@ namespace Olimpijada.Managers
     public class TournamentManager
     {
 
-        private MatchManager matchManager;
+        private MatchManager matchManager =  new MatchManager();
 
         private ObservableCollection<Country> finalRanking = new ObservableCollection<Country>();
         private ObservableCollection<Country> Countries = new ObservableCollection<Country>();
@@ -47,8 +47,7 @@ namespace Olimpijada.Managers
         private bool simulateSemiFinalFinished = false;
         private bool simulateFinalFinished = false;
 
-        private static bool winningChanceEnabled = true;
-        private static bool predictMatchesEnabled = true;
+        private static bool matchPrediction = true;
 
         private string Pots;
 
@@ -60,7 +59,6 @@ namespace Olimpijada.Managers
         public TournamentManager(ObservableCollection<Country> countries)
         {
             Countries = countries;
-            matchManager = new MatchManager(Countries);
         }
 
         private void MakeThePairsOfQuarterFinal()
@@ -123,13 +121,13 @@ namespace Olimpijada.Managers
                     result = matchManager.SimulateMatch(QuarterFinalPair1[0], QuarterFinalPair1[1]);
                     Match matchForFirstTeam = new Match(DateTime.Now, QuarterFinalPair1[1].ISOCode, result[0] + ":" + result[1]);
                     Match matchForSecondTeam = new Match(DateTime.Now, QuarterFinalPair1[0].ISOCode, result[1] + ":" + result[0]);
-                    if (!winningChanceEnabled)
+                    if (!matchPrediction)
                     {
                         QuarterFinalDraw += "\t" + QuarterFinalPair1[0].Team + " - " + QuarterFinalPair1[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     }
                     else
                     {
-                        QuarterFinalDraw += MakeTheWinningChancesForTheMatch(QuarterFinalPair1[0], QuarterFinalPair1[1], result[0], result[1]) + "\n";
+                        QuarterFinalDraw += MakeTheWinningChancesForTheMatchAndPredictResult(QuarterFinalPair1[0], QuarterFinalPair1[1], result[0], result[1]) + "\n";
                     }
                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, QuarterFinalPair1[0], QuarterFinalPair1[1], result[0], result[1]);
 
@@ -146,13 +144,13 @@ namespace Olimpijada.Managers
                     matchForFirstTeam = new Match(DateTime.Now, QuarterFinalPair2[1].ISOCode, result[0] + ":" + result[1]);
                     matchForSecondTeam = new Match(DateTime.Now, QuarterFinalPair2[0].ISOCode, result[1] + ":" + result[0]);
 
-                    if (!winningChanceEnabled)
+                    if (!matchPrediction)
                     {
                         QuarterFinalDraw += "\t" + QuarterFinalPair2[0].Team + " - " + QuarterFinalPair2[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     }
                     else
                     {
-                        QuarterFinalDraw += MakeTheWinningChancesForTheMatch(QuarterFinalPair2[0], QuarterFinalPair2[1], result[0], result[1]) + "\n\n";
+                        QuarterFinalDraw += MakeTheWinningChancesForTheMatchAndPredictResult(QuarterFinalPair2[0], QuarterFinalPair2[1], result[0], result[1]) + "\n\n";
                     }
                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, QuarterFinalPair2[0], QuarterFinalPair2[1], result[0], result[1]);
 
@@ -169,13 +167,13 @@ namespace Olimpijada.Managers
                     matchForFirstTeam = new Match(DateTime.Now, QuarterFinalPair3[1].ISOCode, result[0] + ":" + result[1]);
                     matchForSecondTeam = new Match(DateTime.Now, QuarterFinalPair3[0].ISOCode, result[1] + ":" + result[0]);
 
-                    if (!winningChanceEnabled)
+                    if (!matchPrediction)
                     {
                         QuarterFinalDraw += "\t" + QuarterFinalPair3[0].Team + " - " + QuarterFinalPair3[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     }
                     else
                     {
-                        QuarterFinalDraw += MakeTheWinningChancesForTheMatch(QuarterFinalPair3[0], QuarterFinalPair3[1], result[0], result[1]) + "\n";
+                        QuarterFinalDraw += MakeTheWinningChancesForTheMatchAndPredictResult(QuarterFinalPair3[0], QuarterFinalPair3[1], result[0], result[1]) + "\n";
                     }
                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, QuarterFinalPair3[0], QuarterFinalPair3[1], result[0], result[1]);
 
@@ -192,13 +190,13 @@ namespace Olimpijada.Managers
                     matchForFirstTeam = new Match(DateTime.Now, QuarterFinalPair4[1].ISOCode, result[0] + ":" + result[1]);
                     matchForSecondTeam = new Match(DateTime.Now, QuarterFinalPair4[0].ISOCode, result[1] + ":" + result[0]);
 
-                    if (!winningChanceEnabled)
+                    if (!matchPrediction)
                     {
                         QuarterFinalDraw += "\t" + QuarterFinalPair4[0].Team + " - " + QuarterFinalPair4[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     }
                     else
                     {
-                        QuarterFinalDraw += MakeTheWinningChancesForTheMatch(QuarterFinalPair4[0], QuarterFinalPair4[1], result[0], result[1]) + "\n";
+                        QuarterFinalDraw += MakeTheWinningChancesForTheMatchAndPredictResult(QuarterFinalPair4[0], QuarterFinalPair4[1], result[0], result[1]) + "\n";
                     }
                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, QuarterFinalPair4[0], QuarterFinalPair4[1], result[0], result[1]);
 
@@ -215,15 +213,15 @@ namespace Olimpijada.Managers
 
                     QuarterFinalDraw += "\nPolufinalni mečevi:\n\n";
 
-                    if (!winningChanceEnabled)
+                    if (!matchPrediction)
                     {
                         QuarterFinalDraw += "\t" + SemiFinalPair1[0].Team + " - " + SemiFinalPair1[1].Team;
                         QuarterFinalDraw += "\n\t" + SemiFinalPair2[0].Team + " - " + SemiFinalPair2[1].Team + "\n";
                     }
                     else
                     {
-                        QuarterFinalDraw += MakeTheWinningChancesForTheUpcomingMatch(SemiFinalPair1[0], SemiFinalPair1[1]);
-                        QuarterFinalDraw += MakeTheWinningChancesForTheUpcomingMatch(SemiFinalPair2[0], SemiFinalPair2[1]);
+                        QuarterFinalDraw += MakeTheWinningChancesForTheUpcomingMatchAndPredictResult(SemiFinalPair1[0], SemiFinalPair1[1]);
+                        QuarterFinalDraw += MakeTheWinningChancesForTheUpcomingMatchAndPredictResult(SemiFinalPair2[0], SemiFinalPair2[1]);
                     }
 
                     simulateQuarterFinalFinished = true;
@@ -258,13 +256,13 @@ namespace Olimpijada.Managers
                     Match matchForFirstTeam = new Match(DateTime.Now, SemiFinalPair1[1].ISOCode, result[0] + ":" + result[1]);
                     Match matchForSecondTeam = new Match(DateTime.Now, SemiFinalPair1[0].ISOCode, result[1] + ":" + result[0]);
 
-                    if (!winningChanceEnabled)
+                    if (!matchPrediction)
                     {
                         SemiFinalDraw += "\t" + SemiFinalPair1[0].Team + " - " + SemiFinalPair1[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     }
                     else
                     {
-                        SemiFinalDraw += MakeTheWinningChancesForTheMatch(SemiFinalPair1[0], SemiFinalPair1[1], result[0], result[1]) + "\n";
+                        SemiFinalDraw += MakeTheWinningChancesForTheMatchAndPredictResult(SemiFinalPair1[0], SemiFinalPair1[1], result[0], result[1]) + "\n";
                     }
                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, SemiFinalPair1[0], SemiFinalPair1[1], result[0], result[1]);
 
@@ -283,13 +281,13 @@ namespace Olimpijada.Managers
                     matchForFirstTeam = new Match(DateTime.Now, SemiFinalPair2[1].ISOCode, result[0] + ":" + result[1]);
                     matchForSecondTeam = new Match(DateTime.Now, SemiFinalPair2[0].ISOCode, result[1] + ":" + result[0]);
 
-                    if (!winningChanceEnabled)
+                    if (!matchPrediction)
                     {
                         SemiFinalDraw += "\t" + SemiFinalPair2[0].Team + " - " + SemiFinalPair2[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     }
                     else
                     {
-                        SemiFinalDraw += MakeTheWinningChancesForTheMatch(SemiFinalPair2[0], SemiFinalPair2[1], result[0], result[1]) + "\n";
+                        SemiFinalDraw += MakeTheWinningChancesForTheMatchAndPredictResult(SemiFinalPair2[0], SemiFinalPair2[1], result[0], result[1]) + "\n";
                     }
                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, SemiFinalPair2[0], SemiFinalPair2[0], result[0], result[1]);
 
@@ -308,24 +306,24 @@ namespace Olimpijada.Managers
 
                     SemiFinalDraw += "\nFinale:\n\n";
 
-                    if (!winningChanceEnabled)
+                    if (!matchPrediction)
                     {
                         SemiFinalDraw += "\t" + FinalPair[0].Team + " - " + FinalPair[1].Team + "\n";
                     }
                     else
                     {
-                        SemiFinalDraw += MakeTheWinningChancesForTheUpcomingMatch(FinalPair[0], FinalPair[1]) + "\n";
+                        SemiFinalDraw += MakeTheWinningChancesForTheUpcomingMatchAndPredictResult(FinalPair[0], FinalPair[1]) + "\n";
                     }
 
                     SemiFinalDraw += "\nUtakmica za treće mesto:\n\n";
 
-                    if (!winningChanceEnabled)
+                    if (!matchPrediction)
                     {
                         SemiFinalDraw += "\t" + ThirdPlacePair[0].Team + " - " + ThirdPlacePair[1].Team + "\n";
                     }
                     else
                     {
-                        SemiFinalDraw += MakeTheWinningChancesForTheUpcomingMatch(ThirdPlacePair[0], ThirdPlacePair[1]) + "\n";
+                        SemiFinalDraw += MakeTheWinningChancesForTheUpcomingMatchAndPredictResult(ThirdPlacePair[0], ThirdPlacePair[1]) + "\n";
                     }
 
                     simulateSemiFinalFinished = true;
@@ -359,13 +357,13 @@ namespace Olimpijada.Managers
                     Match matchForFirstTeam = new Match(DateTime.Now, FinalPair[1].ISOCode, result[0] + ":" + result[1]);
                     Match matchForSecondTeam = new Match(DateTime.Now, FinalPair[0].ISOCode, result[1] + ":" + result[0]);
 
-                    if (!winningChanceEnabled)
+                    if (!matchPrediction)
                     {
                         FinalDraw += "\t" + FinalPair[0].Team + " - " + FinalPair[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     }
                     else
                     {
-                        FinalDraw += MakeTheWinningChancesForTheMatch(FinalPair[0], FinalPair[1], result[0], result[1]) + "\n";
+                        FinalDraw += MakeTheWinningChancesForTheMatchAndPredictResult(FinalPair[0], FinalPair[1], result[0], result[1]) + "\n";
                     }
                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, FinalPair[0], FinalPair[1], result[0], result[1]);
 
@@ -386,13 +384,13 @@ namespace Olimpijada.Managers
                     matchForFirstTeam = new Match(DateTime.Now, ThirdPlacePair[1].ISOCode, result[0] + ":" + result[1]);
                     matchForSecondTeam = new Match(DateTime.Now, ThirdPlacePair[0].ISOCode, result[1] + ":" + result[0]);
 
-                    if (!winningChanceEnabled)
+                    if (!matchPrediction)
                     {
                         FinalDraw += "\t" + ThirdPlacePair[0].Team + " - " + ThirdPlacePair[1].Team + " (" + result[0] + ":" + result[1] + ")\n";
                     }
                     else
                     {
-                        FinalDraw += MakeTheWinningChancesForTheMatch(ThirdPlacePair[0], ThirdPlacePair[1], result[0], result[1]) + "\n";
+                        FinalDraw += MakeTheWinningChancesForTheMatchAndPredictResult(ThirdPlacePair[0], ThirdPlacePair[1], result[0], result[1]) + "\n";
                     }
                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, ThirdPlacePair[0], ThirdPlacePair[1], result[0], result[1]);
 
@@ -547,7 +545,7 @@ namespace Olimpijada.Managers
                 Pots += PotG[1].Team;
 
                 Pots += "\n\nEliminaciona faza:\n";
-                if (!winningChanceEnabled)
+                if (!matchPrediction)
                 {
                     Pots += "\n\t" + QuarterFinalPair1[0].Team + " - " + QuarterFinalPair1[1].Team;
                     Pots += "\n\t" + QuarterFinalPair2[0].Team + " - " + QuarterFinalPair2[1].Team + "\n";
@@ -558,13 +556,13 @@ namespace Olimpijada.Managers
                 else
                 {
                     Pots += "\n";
-                    Pots += MakeTheWinningChancesForTheUpcomingMatch(QuarterFinalPair1[0], QuarterFinalPair1[1]);
+                    Pots += MakeTheWinningChancesForTheUpcomingMatchAndPredictResult(QuarterFinalPair1[0], QuarterFinalPair1[1]);
 
-                    Pots += MakeTheWinningChancesForTheUpcomingMatch(QuarterFinalPair2[0], QuarterFinalPair2[1]) + "\n";
+                    Pots += MakeTheWinningChancesForTheUpcomingMatchAndPredictResult(QuarterFinalPair2[0], QuarterFinalPair2[1]) + "\n";
 
-                    Pots += MakeTheWinningChancesForTheUpcomingMatch(QuarterFinalPair3[0], QuarterFinalPair3[1]);
+                    Pots += MakeTheWinningChancesForTheUpcomingMatchAndPredictResult(QuarterFinalPair3[0], QuarterFinalPair3[1]);
 
-                    Pots += MakeTheWinningChancesForTheUpcomingMatch(QuarterFinalPair4[0], QuarterFinalPair4[1]);
+                    Pots += MakeTheWinningChancesForTheUpcomingMatchAndPredictResult(QuarterFinalPair4[0], QuarterFinalPair4[1]);
                 }
 
                 potsMade = true;
@@ -578,86 +576,58 @@ namespace Olimpijada.Managers
             Console.WriteLine(Pots);
         }
 
-        private string MakeTheWinningChancesForTheMatch(Country team1, Country team2, int score1, int score2)
+        private string MakeTheWinningChancesForTheMatchAndPredictResult(Country team1, Country team2, int score1, int score2)
         {
             string winningChances = matchManager.CalculateWinningChances(team1, team2);
+            string prediction = matchManager.PredictMatch(team1, team2);
             string formattedResult = $"{team1.Team} - {team2.Team} ({score1}:{score2})";
             formattedResult = formattedResult.PadRight(40);
 
-            return "\t\t" + formattedResult + winningChances;
+            return "\t\t" + formattedResult + winningChances + "\t" + prediction;
         }
 
-        private string MakeTheWinningChancesForTheUpcomingMatch(Country team1, Country team2)
+        private string MakeTheWinningChancesForTheUpcomingMatchAndPredictResult(Country team1, Country team2)
         {
             string winningChances = matchManager.CalculateWinningChances(team1, team2);
+            string prediction = matchManager.PredictMatch(team1, team2);
             string formattedResult = $"{team1.Team} - {team2.Team}";
             formattedResult = formattedResult.PadRight(40);
 
-            return "\t\t" + formattedResult + winningChances + "\n";
+            return "\t\t" + formattedResult + winningChances + "\t" + prediction + "\n";
         }
 
-        public void EnableChanceWinningPrediction()
+        public void EnableMatchPredictions()
         {
             string ret = "\n**************************************************************\n\n\n";
-            if (winningChanceEnabled)
+            if (matchPrediction)
             {
-                ret += "Prikazivanje šansi za pobedu je već omogućeno!";
+                ret += "Prikazivanje šansi za pobedu i predikciju rezultata mečeva je već omogućeno!";
             }
             else
             {
-                winningChanceEnabled = true;
-                ret += "Prikazivanje šansi za pobedu je omogućeno!";
+                matchPrediction = true;
+                ret += "Prikazivanje šansi za pobedu i predikciju rezultata mečeva je omogućeno!";
             }
             ret += "\n\n\n**************************************************************\n\n";
             Console.WriteLine(ret);
         }
 
-        public void DisableChanceWinningPrediction()
+        public void DisableMatchPredictions()
         {
             string ret = "\n**************************************************************\n\n\n";
-            if (!winningChanceEnabled)
+            if (!matchPrediction)
             {
-                ret += "Prikazivanje šansi za pobedu je već onemogućeno!";
+                ret += "Prikazivanje šansi za pobedu i predikciju rezultata mečeva je već onemogućeno!";
             }
             else
             {
-                winningChanceEnabled = false;
-                ret += "Prikazivanje šansi za pobedu je onemogućeno!";
+                matchPrediction = false;
+                ret += "Prikazivanje šansi za pobedu i predikciju rezultata mečeva je onemogućeno!";
             }
             ret += "\n\n\n**************************************************************\n\n";
             Console.WriteLine(ret);
         }
 
-        public void EnableMatchPrediction()
-        {
-            string ret = "\n**************************************************************\n\n\n";
-            if (predictMatchesEnabled)
-            {
-                ret += "Prikazivanje predikcije mečeva je već omogućeno!";
-            }
-            else
-            {
-                predictMatchesEnabled = true;
-                ret += "Prikazivanje predikcije mečeva je omogućeno!";
-            }
-            ret += "\n\n\n**************************************************************\n\n";
-            Console.WriteLine(ret);
-        }
-
-        public void DisableMatchPrediction()
-        {
-            string ret = "\n**************************************************************\n\n\n";
-            if (!predictMatchesEnabled)
-            {
-                ret += "Prikazivanje predikcije mečeva je već onemogućeno!";
-            }
-            else
-            {
-                predictMatchesEnabled = false;
-                ret += "Prikazivanje predikcije mečeva je onemogućeno!";
-            }
-            ret += "\n\n\n**************************************************************\n\n";
-            Console.WriteLine(ret);
-        }
+        
     }
 }

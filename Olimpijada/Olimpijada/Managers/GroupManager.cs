@@ -24,7 +24,7 @@ namespace Olimpijada.Managers
         private ObservableCollection<Country> Countries = new ObservableCollection<Country>();
         string groupsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase", "groups.json");
         string exibitionsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase", "exibitions.json");
-        private MatchManager matchManager;
+        private MatchManager matchManager = new MatchManager();
 
         private ObservableCollection<Country> finalRanking = new ObservableCollection<Country>();
 
@@ -39,8 +39,7 @@ namespace Olimpijada.Managers
         private static bool firstFinished = false;
         private static bool secondFinished = false;
         private static bool thirdFinished = false;
-        private static bool winningChanceEnabled = true;
-        private static bool predictMatchesEnabled = true;
+        private static bool matchPrediction = true;
 
         public GroupManager()
         {
@@ -54,7 +53,6 @@ namespace Olimpijada.Managers
             ExibitionMatches = JsonSerializer.Deserialize<Dictionary<string, ObservableCollection<Match>>>(exibitionsJson, options);
             LoadAllCountries();
             LoadExibitionMatches();
-            matchManager = new MatchManager(Countries);
         }
 
         private void LoadAllCountries()
@@ -155,13 +153,13 @@ namespace Olimpijada.Managers
                             Match matchForSecondTeam = new Match(DateTime.Now, Group[firstIndex].ISOCode, result[1] + ":" + result[0]);
 
                             
-                            if (!winningChanceEnabled)
+                            if (!matchPrediction)
                             {
                                 ResultOfFirstRoundOfGroupStage += "\t\t" + Group[firstIndex].Team + " - " + Group[secondIndex].Team + " (" + result[0] + ":" + result[1] + ")\n";
                             }
                             else
                             {
-                                ResultOfFirstRoundOfGroupStage += MakeTheWinningChancesForTheMatch(Group[firstIndex], Group[secondIndex], result[0], result[1]);
+                                ResultOfFirstRoundOfGroupStage += MakeTheWinningChancesForTheMatchAndPredictResult(Group[firstIndex], Group[secondIndex], result[0], result[1]);
                             }
                             SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
                         }
@@ -208,13 +206,13 @@ namespace Olimpijada.Managers
                                 Match matchForFirstTeam = new Match(DateTime.Now, Group[2].ISOCode, result[0] + ":" + result[1]);
                                 Match matchForSecondTeam = new Match(DateTime.Now, Group[0].ISOCode, result[1] + ":" + result[0]);
 
-                                if (!winningChanceEnabled)
+                                if (!matchPrediction)
                                 {
                                     ResultOfSecondRoundOfGroupStage += "\t\t" + Group[0].Team + " - " + Group[2].Team + " (" + result[0] + ":" + result[1] + ")\n";
                                 }
                                 else
                                 {
-                                    ResultOfSecondRoundOfGroupStage += MakeTheWinningChancesForTheMatch(Group[0], Group[2], result[0], result[1]);
+                                    ResultOfSecondRoundOfGroupStage += MakeTheWinningChancesForTheMatchAndPredictResult(Group[0], Group[2], result[0], result[1]);
                                 }
                                 SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
@@ -225,13 +223,13 @@ namespace Olimpijada.Managers
                                 matchForFirstTeam = new Match(DateTime.Now, Group[3].ISOCode, result[0] + ":" + result[1]);
                                 matchForSecondTeam = new Match(DateTime.Now, Group[1].ISOCode, result[1] + ":" + result[0]);
 
-                                if (!winningChanceEnabled)
+                                if (!matchPrediction)
                                 {
                                     ResultOfSecondRoundOfGroupStage += "\t\t" + Group[1].Team + " - " + Group[3].Team + " (" + result[0] + ":" + result[1] + ")\n";
                                 }
                                 else
                                 {
-                                    ResultOfSecondRoundOfGroupStage += MakeTheWinningChancesForTheMatch(Group[1], Group[3], result[0], result[1]);
+                                    ResultOfSecondRoundOfGroupStage += MakeTheWinningChancesForTheMatchAndPredictResult(Group[1], Group[3], result[0], result[1]);
                                 }
                                 SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
                             }
@@ -285,13 +283,13 @@ namespace Olimpijada.Managers
                                     Match matchForFirstTeam = new Match(DateTime.Now, Group[3].ISOCode, result[0] + ":" + result[1]);
                                     Match matchForSecondTeam = new Match(DateTime.Now, Group[0].ISOCode, result[1] + ":" + result[0]);
 
-                                    if (!winningChanceEnabled)
+                                    if (!matchPrediction)
                                     {
                                         ResultOfThirdRoundOfGroupStage += "\t\t" + Group[0].Team + " - " + Group[3].Team + " (" + result[0] + ":" + result[1] + ")\n";
                                     }
                                     else
                                     {
-                                        ResultOfThirdRoundOfGroupStage += MakeTheWinningChancesForTheMatch(Group[0], Group[3], result[0], result[1]);
+                                        ResultOfThirdRoundOfGroupStage += MakeTheWinningChancesForTheMatchAndPredictResult(Group[0], Group[3], result[0], result[1]);
                                     }
                                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
@@ -302,13 +300,13 @@ namespace Olimpijada.Managers
                                     matchForFirstTeam = new Match(DateTime.Now, Group[2].ISOCode, result[0] + ":" + result[1]);
                                     matchForSecondTeam = new Match(DateTime.Now, Group[1].ISOCode, result[1] + ":" + result[0]);
 
-                                    if (!winningChanceEnabled)
+                                    if (!matchPrediction)
                                     {
                                         ResultOfThirdRoundOfGroupStage += "\t\t" + Group[1].Team + " - " + Group[2].Team + " (" + result[0] + ":" + result[1] + ")\n";
                                     }
                                     else
                                     {
-                                        ResultOfThirdRoundOfGroupStage += MakeTheWinningChancesForTheMatch(Group[1], Group[2], result[0], result[1]);
+                                        ResultOfThirdRoundOfGroupStage += MakeTheWinningChancesForTheMatchAndPredictResult(Group[1], Group[2], result[0], result[1]);
                                     }
                                     SaveTheMatch(matchForFirstTeam, matchForSecondTeam, firstIndex, secondIndex, result[0], result[1]);
 
@@ -338,13 +336,14 @@ namespace Olimpijada.Managers
             return thirdFinished;
         }
 
-        private string MakeTheWinningChancesForTheMatch(Country team1, Country team2, int score1, int score2)
+        private string MakeTheWinningChancesForTheMatchAndPredictResult(Country team1, Country team2, int score1, int score2)
         {
             string winningChances = matchManager.CalculateWinningChances(team1, team2);
+            string prediction = matchManager.PredictMatch(team1, team2);
             string formattedResult = $"{team1.Team} - {team2.Team} ({score1}:{score2})";
             formattedResult = formattedResult.PadRight(40);
 
-            return "\t\t" + formattedResult + winningChances + "\n";
+            return "\t\t" + formattedResult + winningChances + "\t" + prediction + "\n";
         }
 
         public void SaveTheMatch(Match matchForFirstTeam, Match matchForSecondTeam, int firstIndex, int secondIndex, int result1, int result2)
@@ -610,24 +609,14 @@ namespace Olimpijada.Managers
             Console.WriteLine(GroupStageStandings);
         }
 
-        public void EnableChanceWinningPrediction()
+        public void EnableMatchPredictions()
         {
-            winningChanceEnabled = true;
+            matchPrediction = true;
         }
 
-        public void DisableChanceWinningPrediction()
+        public void DisableMatchPredictions()
         {
-            winningChanceEnabled = false;
-        }
-
-        public void EnableMatchPrediction()
-        {
-            predictMatchesEnabled = true;
-        }
-
-        public void DisableMatchPrediction()
-        {
-            predictMatchesEnabled = false;
+            matchPrediction = false;
         }
     }
 }

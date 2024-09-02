@@ -37,10 +37,8 @@ do
     Console.WriteLine("\t11)Simuliraj finale");
     Console.WriteLine("\t12)Ispiši timove koji su osvojili medalje");
     Console.WriteLine("\t13)Ispiši rezultate nokaut faze turnira\n");
-    Console.WriteLine("\t14)Omogući prikazivanje šansi za pobedu na meču");
-    Console.WriteLine("\t15)Onemogući prikazivanje šansi za pobedu na meču");
-    Console.WriteLine("\t16)Omogući prikazivanje predikcije rezultata mečeva");
-    Console.WriteLine("\t17)Onemogući prikazivanje predikcije rezultata mečeva\n");
+    Console.WriteLine("\t14)Omogući prikazivanje šansi za pobedu i predikciju rezultata na meču");
+    Console.WriteLine("\t15)Onemogući prikazivanje šansi za pobedu i predikciju rezultata na meču\n");
     Console.WriteLine("\t20)Izlaz iz simulacije");
 
     Int32.TryParse(Console.ReadLine(), out result);
@@ -99,20 +97,12 @@ void Menu(int result)
             tournamentManager.PrintCurrentResultsOfKnockoutStage();
             break;
         case 14:
-            groupManager.EnableChanceWinningPrediction();
-            tournamentManager.EnableChanceWinningPrediction();
+            groupManager.EnableMatchPredictions();
+            tournamentManager.EnableMatchPredictions();
             break;
         case 15:
-            groupManager.DisableChanceWinningPrediction();
-            tournamentManager.DisableChanceWinningPrediction();
-            break;
-        case 16:
-            groupManager.EnableMatchPrediction();
-            tournamentManager.EnableMatchPrediction();
-            break;
-        case 17:
-            groupManager.DisableMatchPrediction();
-            tournamentManager.DisableMatchPrediction();
+            groupManager.DisableMatchPredictions();
+            tournamentManager.DisableMatchPredictions();
             break;
         case 20:
             break;

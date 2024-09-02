@@ -11,11 +11,10 @@ namespace Olimpijada.Managers
 {
     public class MatchManager
     {
-        public ObservableCollection<Country> Countries { get; set; }
 
-        public MatchManager(ObservableCollection<Country> countries) 
+        public MatchManager() 
         {
-            this.Countries = countries;
+
         }
 
         public int[] SimulateMatch(Country team1, Country team2)
@@ -26,8 +25,8 @@ namespace Olimpijada.Managers
             int teamForm2 = CalculateFormFactor(team2, team1);
 
             Random r = new Random();
-            int score1 = (int)(r.Next(70, 100) + teamForm1);
-            int score2 = (int)(r.Next(70, 100) + teamForm2);
+            int score1 = (int)(r.Next(70, 90) + teamForm1);
+            int score2 = (int)(r.Next(70, 90) + teamForm2);
             if(score1 == score2)
             {
                 score2--;
@@ -87,6 +86,21 @@ namespace Olimpijada.Managers
             }
 
             return $"Šanse za pobedu: ({team1WinningChance}% - {team2WinningChance}%)";
+        }
+
+        public string PredictMatch(Country team1, Country team2)
+        {
+            int teamForm1 = CalculateFormFactor(team1, team2);
+            int teamForm2 = CalculateFormFactor(team2, team1);
+
+            int score1 = 80 + teamForm1;
+            int score2 = 80 + teamForm2;
+            if (score1 == score2)
+            {
+                score2--;
+            }
+
+            return $"Predvidjen rezultat: ({score1}:{score2})";
         }
 
     }
