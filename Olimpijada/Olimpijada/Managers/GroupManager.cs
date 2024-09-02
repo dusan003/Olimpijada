@@ -22,8 +22,8 @@ namespace Olimpijada.Managers
         private Dictionary<string, ObservableCollection<Country>> Groups;
         private Dictionary<string, ObservableCollection<Match>> ExibitionMatches;
         private ObservableCollection<Country> Countries = new ObservableCollection<Country>();
-        string groupsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase", "groups.json");
-        string exibitionsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataBase", "exibitions.json");
+        string groupsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "DataBase", "groups.json");
+        string exibitionsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "DataBase", "exibitions.json");
         private MatchManager matchManager = new MatchManager();
 
         private ObservableCollection<Country> finalRanking = new ObservableCollection<Country>();
