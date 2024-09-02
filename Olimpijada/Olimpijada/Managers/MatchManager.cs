@@ -85,6 +85,17 @@ namespace Olimpijada.Managers
                 team2WinningChance = 50 + formDifference;
             }
 
+            if(team1WinningChance > 100)
+            {
+                team1WinningChance = 100;
+                team2WinningChance = 0;
+            }
+            if(team2WinningChance > 100)
+            {
+                team2WinningChance = 100;
+                team1WinningChance = 0;
+            }
+
             return $"Šanse za pobedu: ({team1WinningChance}% - {team2WinningChance}%)";
         }
 
